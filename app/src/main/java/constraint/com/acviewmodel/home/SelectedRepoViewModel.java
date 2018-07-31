@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import constraint.com.acviewmodel.model.Repo;
-import constraint.com.acviewmodel.networking.RepoApi;
+import constraint.com.acviewmodel.networking.RepoService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,6 +22,12 @@ public class SelectedRepoViewModel extends ViewModel {
     public final MutableLiveData<Repo> repoMutableLiveData = new MutableLiveData<>();
     private Call<Repo> repoApi;
     private static final String KEY_REPO_DETAILS = "repo_details";
+    private RepoService repoService;
+
+    @Inject
+    public SelectedRepoViewModel(RepoService repoService) {
+        this.repoService = repoService;
+    }
 
     public LiveData<Repo> getRepoMutableLiveData() {
         return repoMutableLiveData;
@@ -45,7 +53,7 @@ public class SelectedRepoViewModel extends ViewModel {
     }
 
     private void loadRepo(String[] repo_details) {
-        repoApi = RepoApi.getInstance().getRepo(repo_details[0], repo_details[1]);
+        repoApi = repoService.getRepo(repo_details[0], repo_details[1]);
         repoApi.enqueue(new Callback<Repo>() {
             @Override
             public void onResponse(@NonNull Call<Repo> call, @NonNull Response<Repo> response) {

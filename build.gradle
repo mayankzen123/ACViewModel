@@ -16,6 +16,7 @@ ext {
     supportLibVersion = '26.1.0'
     retrofitVersion = '2.3.0'
     butterKnifeVersion = '8.8.1'
+    daggerVersion = '2.13'
 }
 allprojects {
     repositories {

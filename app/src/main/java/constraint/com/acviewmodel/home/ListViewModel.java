@@ -8,8 +8,10 @@ import android.util.Log;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import constraint.com.acviewmodel.model.Repo;
-import constraint.com.acviewmodel.networking.RepoApi;
+import constraint.com.acviewmodel.networking.RepoService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,8 +24,11 @@ public class ListViewModel extends ViewModel {
     private final MutableLiveData<Boolean> repoLoadError = new MutableLiveData<>();
     private final MutableLiveData<Boolean> repoLoadingProgress = new MutableLiveData<>();
     private Call<List<Repo>> repositories;
+    private RepoService repoService;
 
-    public ListViewModel() {
+    @Inject
+    public ListViewModel(RepoService repoService) {
+        this.repoService = repoService;
         fetchRepos();
     }
 
@@ -41,7 +46,7 @@ public class ListViewModel extends ViewModel {
 
     private void fetchRepos() {
         repoLoadingProgress.setValue(true);
-        repositories = RepoApi.getInstance().getRepositories();
+        repositories = repoService.getRepositories();
         repositories.enqueue(new Callback<List<Repo>>() {
             @Override
             public void onResponse(@NonNull Call<List<Repo>> call, @NonNull Response<List<Repo>> response) {
