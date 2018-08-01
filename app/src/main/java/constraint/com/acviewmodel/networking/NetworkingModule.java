@@ -23,6 +23,8 @@ public abstract class NetworkingModule {
                 .build();
     }
 
+    @Provides
+    @Singleton
     static RepoService getRepoService(Retrofit retrofit) {
         return retrofit.create(RepoService.class);
     }

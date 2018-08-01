@@ -2,6 +2,7 @@ package constraint.com.acviewmodel.Details;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,12 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import constraint.com.acviewmodel.R;
+import constraint.com.acviewmodel.base.MyApplication;
 import constraint.com.acviewmodel.home.SelectedRepoViewModel;
 import constraint.com.acviewmodel.model.Repo;
+import constraint.com.acviewmodel.viewmodel.ViewModelFactory;
 
 /**
  * Created by Innovify on 31/7/18.
@@ -31,6 +36,15 @@ public class DetailFragment extends Fragment {
     TextView tvStarCount;
     Unbinder unbinder;
     private SelectedRepoViewModel viewModel;
+    @Inject
+    ViewModelFactory viewModelFactory;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        MyApplication.getApplicationComponent(context).inject(this);
+    }
+
 
     @Nullable
     @Override
@@ -47,7 +61,7 @@ public class DetailFragment extends Fragment {
     }
 
     private void displayInfo() {
-        viewModel = ViewModelProviders.of(getActivity()).get(SelectedRepoViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(SelectedRepoViewModel.class);
         viewModel.getRepoMutableLiveData().observe(this, new Observer<Repo>() {
             @Override
             public void onChanged(@Nullable Repo repo) {
